@@ -10,29 +10,46 @@ import SwiftUI
 struct CarouselView: View {
     @State var imageURLList: [String]?
     @State var isPlaceholderActive: Bool = true
-    @State var isAutoScrollActive: Bool = false
     @State var selectedIndex = 0
     
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .centerLastTextBaseline,content: {
                 TabView (selection: $selectedIndex) {
-                    Image(systemName: "").tag(-1)
                     if let imageList = imageURLList {
+                        AsyncImage(url: URL(string: imageList.first ?? "")) { downloadedImage in
+                            downloadedImage.resizable()
+                                .scaledToFill()
+                                .transition(.opacity)
+                            
+                        } placeholder: {
+                            if isPlaceholderActive {
+                                ProgressView()
+                            }
+                        }.tag(-1)
                         ForEach(imageList.indices, id: \.self) { index in
                             AsyncImage(url: URL(string: imageList[index])) { downloadedImage in
                                 downloadedImage.resizable()
                                     .scaledToFill()
                                     .transition(.opacity)
-                                    .tag(index)                                
+                                    .tag(index)
                             } placeholder: {
                                 if isPlaceholderActive {
-                                   ProgressView()
+                                    ProgressView()
                                 }
                             }
                         }
+                        AsyncImage(url: URL(string: imageList.last ?? "")) { downloadedImage in
+                            downloadedImage.resizable()
+                                .scaledToFill()
+                                .transition(.opacity)
+                            
+                        } placeholder: {
+                            if isPlaceholderActive {
+                                ProgressView()
+                            }
+                        }.tag(imageURLList?.count ?? 0)
                     }
-                    Image(systemName: "").tag(imageURLList?.count ?? 0)
                 }
                 .frame(height: 300)
                 .tabViewStyle(.page(indexDisplayMode: .never))
