@@ -17,7 +17,7 @@ struct CarouselView: View {
             ZStack(alignment: .centerLastTextBaseline,content: {
                 TabView (selection: $selectedIndex) {
                     if let imageList = imageURLList {
-                        AsyncImage(url: URL(string: imageList.first ?? "")) { downloadedImage in
+                        AsyncImage(url: URL(string: imageList.last ?? "")) { downloadedImage in
                             downloadedImage.resizable()
                                 .scaledToFill()
                                 .transition(.opacity)
@@ -39,7 +39,7 @@ struct CarouselView: View {
                                 }
                             }
                         }
-                        AsyncImage(url: URL(string: imageList.last ?? "")) { downloadedImage in
+                        AsyncImage(url: URL(string: imageList.first ?? "")) { downloadedImage in
                             downloadedImage.resizable()
                                 .scaledToFill()
                                 .transition(.opacity)
